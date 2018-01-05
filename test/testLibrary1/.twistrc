@@ -1,0 +1,20 @@
+{
+    "decorators": [
+        [ "Store", {
+            "module": "@twist/core",
+            "export": "Store",
+            "inherits": {
+                "module": "@twist/core",
+                "export": "BaseStore"
+            }
+        } ]
+    ],
+    "components": [
+        [ "my:component", {
+            "module": "@twist/core",
+            "export": "MyComponent"
+        } ]
+    ]
+    // Full-line comments are ok
+    /* and so are inline comments */
+}

@@ -1,0 +1,12 @@
+{
+    "options": {
+        "": ""
+    },
+    "decorators": [
+        "Decorator1"
+        [ "Decorator2", { "module": "@twist/test" } ],
+        [ "Decorator3", { "module": "@twist/test", "export": "Dec" } ],
+        [ "Decorator4", { "inherits": "BaseClass" } ],
+        [ "Decorator5", { "inherits": { module": "@twist/test", "export": "BaseClass" } } ]
+    ]
+}
