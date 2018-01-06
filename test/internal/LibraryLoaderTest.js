@@ -14,9 +14,9 @@
 /* global describe, it */
 
 const path = require('path');
+const fs = require('fs');
 const sinon = require('sinon');
 const assert = require('assert');
-const mock = require('mock-require');
 const LibraryLoader = require('../../src/internal/LibraryLoader');
 
 describe('LibraryLoader', () => {
@@ -85,34 +85,28 @@ describe('LibraryLoader', () => {
             `Invalid .twistrc file at ${require.resolve(__dirname + '/../invalidLibrary/.twistrc')} - please ensure it is valid JSON`);
     });
 
-    xit('loading libraries & duplicate handling', () => {
+    it('loading libraries & duplicate handling', () => {
         const loader = new LibraryLoader();
 
-        let packageJsonInfo;
-        function setPackageJson(name, version) {
-            packageJsonInfo = {
-                path: '/some/fake/package.json',
-                contents: { name, version }
-            };
-        }
+        let libraryPath, packageJson, configCallback;
+
+        // We need to mock out the code that reads the files from disk
+        sinon.stub(fs, 'existsSync').callsFake(() => true);
+        sinon.stub(fs, 'readFileSync').callsFake(() => packageJson);
+        sinon.stub(LibraryLoader, 'getRootDir').callsFake(() => libraryPath);
+        sinon.stub(loader, 'loadConfigFile').callsFake(() => configCallback());
 
         function pretendLoadLibrary(name, version, cb) {
-            // loadLibrary() is going to try to require the config file, so need to mock it out
-            mock(name + '/config', cb => cb());
-
-            setPackageJson(name, version);
-            loader.load(name, () => {
+            libraryPath = '/path/' + Math.random() + '/' + name;
+            packageJson = JSON.stringify({ name, version });
+            configCallback = () => {
                 assert.equal(loader.currentLibrary.name, name);
                 assert.equal(loader.currentLibrary.version, version);
-                assert.equal(loader.currentLibrary.path, '/some/fake');
+                assert.equal(loader.currentLibrary.path, libraryPath);
                 cb && cb();
-            });
+            };
+            loader.load(name);
         }
-
-        // We need to mock out the code to get the src dir as well, because this calls require.resolve
-        // (mock only mocks out require, not require.resolve)
-        sinon.stub(LibraryLoader, 'getSourceDir').callsFake(x => x);
-        sinon.stub(LibraryLoader, 'getPackageJsonInfo').callsFake(() => packageJsonInfo);
 
         pretendLoadLibrary('LibraryA', '1.0', () => {
             pretendLoadLibrary('LibraryB', '2.0', () => {
@@ -141,7 +135,5 @@ You're trying to load LibraryB 4.0, but LibraryB 2.0 was already loaded:
         assert.equal(loader.libraryInfos.length, 4);
         assert.deepEqual(loader.libraryInfos.map(info => info.version), [ '1.0', '2.0', '3.0', '4.0' ]);
         assert.deepEqual(loader.libraryInfos.map(info => info.name), [ 'LibraryA', 'LibraryB', 'LibraryC', 'LibraryB' ]);
-
-        mock.stopAll();
     });
 });

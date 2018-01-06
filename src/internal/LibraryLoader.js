@@ -25,7 +25,7 @@ class LibraryInfo {
         // Load other details from package.json
         // Note that this must exist, because that's how we resolve the library path!
         if (libraryPath) {
-            let packageJson = require(path.join(libraryPath, 'package.json'));
+            let packageJson = JSON.parse(fs.readFileSync(path.join(libraryPath, 'package.json'), { encoding: 'utf8' }));
             this.name = packageJson.name;
             this.version = packageJson.version;
         }

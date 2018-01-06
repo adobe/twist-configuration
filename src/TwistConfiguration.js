@@ -129,7 +129,7 @@ module.exports = class TwistConfiguration {
             config.module = config.module || this.currentLibrary.name;
             config.export = config.export || name;
             if (config.inherits) {
-                config.inherits = Array.isArray(config.inherits) ? { export: config.inherits } : config.inherits;
+                config.inherits = typeof config.inherits === 'string' ? { export: config.inherits } : config.inherits;
                 config.inherits.module = config.inherits.module || this.currentLibrary.name;
             }
             this.addDecorator(name, config);
@@ -143,15 +143,15 @@ module.exports = class TwistConfiguration {
         });
 
         // Babel plugins
-        this._forEachConfig(config.libraries, this.addBabelPlugin.bind(this));
+        this._forEachConfig(config.babelPlugins, this.addBabelPlugin.bind(this));
 
         // Options
-        this._forEachConfig(config.libraries, this.setOption.bind(this));
+        this._forEachConfig(config.options, this.setOption.bind(this));
 
-        // Contextual configuration - if you've provided additional configuration under env[context],
+        // Contextual configuration - if you've provided additional configuration under context[contextname],
         // we'll add that too (e.g. additional options only for a webpack environment).
-        if (config.env) {
-            this.mergeConfig(config.env[this.context]);
+        if (config.context) {
+            this.mergeConfig(config.context[this.context]);
         }
     }
 

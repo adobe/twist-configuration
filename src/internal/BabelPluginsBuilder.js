@@ -25,21 +25,7 @@ module.exports = class BabelPluginsBuilder {
     }
 
     addPreset(mod, options) {
-        if (typeof mod === 'string') {
-            this._presets.push([ mod && mod.default || mod, options || {} ]);
-            return;
-        }
-
-        // Retain the existing behaviour (adding the list of plugins from the preset manually), for non-string presets:
-        const plugins = (mod && mod.default || mod)(null, options).plugins;
-        plugins.forEach((plugin) => {
-            if (Array.isArray(plugin)) {
-                this.add(plugin[0], plugin[1]);
-            }
-            else {
-                this.add(plugin);
-            }
-        });
+        this._presets.push([ mod && mod.default || mod, options || {} ]);
     }
 
     build() {

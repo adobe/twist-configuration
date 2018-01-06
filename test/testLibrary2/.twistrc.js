@@ -12,7 +12,7 @@ module.exports = function (options) {
             } ]
         ],
         "components": [
-            [ options.componentName, {
+            [ options.componentName || 'default:component', {
                 "module": "@twist/core",
                 "export": "MyComponent"
             } ]

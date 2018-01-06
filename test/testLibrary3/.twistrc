@@ -1,12 +1,25 @@
 {
     "options": {
-        "": ""
+        "polyfill": 42
     },
     "decorators": [
-        "Decorator1"
+        "Decorator1",
         [ "Decorator2", { "module": "@twist/test" } ],
         [ "Decorator3", { "module": "@twist/test", "export": "Dec" } ],
         [ "Decorator4", { "inherits": "BaseClass" } ],
-        [ "Decorator5", { "inherits": { module": "@twist/test", "export": "BaseClass" } } ]
-    ]
+        [ "Decorator5", { "inherits": { "module": "@twist/test", "export": "BaseClass" } } ]
+    ],
+    "babelPlugins": [
+        "plugin1",
+        [ "plugin2", { "option": true } ],
+        "plugin1" // Same plugin twice should be ignored
+    ],
+    "context": {
+        "webpack": {
+            "options": {
+                "polyfill": 1024,
+                "regenerator": "hello"
+            }
+        }
+    }
 }

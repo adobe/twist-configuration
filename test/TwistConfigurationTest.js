@@ -44,7 +44,6 @@ describe('TwistConfiguration', () => {
     });
 
     it('should be able to add load a .twistrc configuration with decorators/components', () => {
-
         var config = new TwistConfiguration('node', { root: path.join(__dirname, 'testLibrary1') });
 
         assert.deepEqual(config.decorators.Store, {
@@ -67,6 +66,75 @@ describe('TwistConfiguration', () => {
         // Should add an override for inherits:
         assert(/src\/third_party\/inherits/.test(twistOptions.aliases['babel-runtime/helpers/inherits']));
         assert.equal(twistOptions.aliases['test-library1'], path.join(__dirname, 'testLibrary1'));
+    });
+
+    it('should be able to add load a .twistrc.js configuration with decorators/components', () => {
+        var config = new TwistConfiguration('node', { root: path.join(__dirname, 'testLibrary2') });
+
+        assert.deepEqual(config.decorators.Store, {
+            module: '@twist/core',
+            export: 'Store',
+            inherits: {
+                module: '@twist/core',
+                export: 'BaseStore'
+            }
+        });
+        assert.deepEqual(config.components['default:component'], {
+            module: '@twist/core',
+            export: 'MyComponent'
+        });
+
+        // Should be present as auto imports in twistOptions too:
+        let twistOptions = config.twistOptions;
+        assert.deepEqual(twistOptions.autoImport, Object.assign({}, config.decorators, config.components));
+    });
+
+    it('should be able to add load a .twistrc configuration with implicit decorator module/export', () => {
+        var config = new TwistConfiguration('node', { root: path.join(__dirname, 'testLibrary3') });
+
+        assert.deepEqual(config.decorators, {
+            Decorator1: { module: 'test-library3', export: 'Decorator1' },
+            Decorator2: { module: '@twist/test', export: 'Decorator2' },
+            Decorator3: { module: '@twist/test', export: 'Dec' },
+            Decorator4: { module: 'test-library3', export: 'Decorator4', inherits: { module: 'test-library3', export: 'BaseClass' } },
+            Decorator5: { module: 'test-library3', export: 'Decorator5', inherits: { module: '@twist/test', export: 'BaseClass' } }
+        });
+    });
+
+    it('should be able to add load a .twistrc configuration with babel plugins', () => {
+        var config = new TwistConfiguration('node', { root: path.join(__dirname, 'testLibrary3') });
+
+        assert.deepEqual(config.twistOptions.plugins, [
+            [ 'plugin1', {} ],
+            [ 'plugin2', { option: true } ]
+        ]);
+    });
+
+    it('should be able to add load a .twistrc configuration with options', () => {
+        // No context options
+        var config = new TwistConfiguration('node', { root: path.join(__dirname, 'testLibrary3') });
+        assert.equal(config.getOption('polyfill'), 42);
+        assert.equal(config.getOption('regenerator'), false);
+
+        // Context options (for the webpack context) should override
+        config = new TwistConfiguration('webpack', { root: path.join(__dirname, 'testLibrary3') });
+        assert.equal(config.getOption('polyfill'), 1024);
+        assert.equal(config.getOption('regenerator'), 'hello');
+    });
+
+    it('should be able to add load a .twistrc configuration that loads other libraries', () => {
+        var config = new TwistConfiguration('node', { root: path.join(__dirname, 'testLibrary4') });
+
+        assert.deepEqual(config.components, {
+            'another:component': {
+                export: 'MyComponent',
+                module: '@twist/core'
+            },
+            'my:component': {
+                export: 'OverriddenComponent',
+                module: 'my-module'
+            }
+        });
     });
 
     it('transforms async without the regenerator transform by default', () => {
