@@ -37,11 +37,11 @@ module.exports = class TwistConfiguration {
      * @param {object} [options]
      * @param {object} [env]
      */
-    constructor(contextName, options) {
+    constructor(contextName, options = {}) {
         this.context = contextName || 'node';
 
         // The options that you can configure (these are the default options below):
-        this._options = Object.assign({}, DEFAULT_OPTIONS, options || {});
+        this._options = Object.assign({}, DEFAULT_OPTIONS, options);
 
         // Twist compiler settings
         this._components = {};
