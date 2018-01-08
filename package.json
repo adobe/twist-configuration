@@ -2,7 +2,7 @@
   "name": "@twist/configuration",
   "version": "0.1.0",
   "author": "Adobe Systems Inc.",
-  "repository": "none",
+  "repository": "https://github.com/adobe/twist-configuration",
   "license": "Apache-2.0",
   "main": "src/TwistConfiguration.js",
   "scripts": {

@@ -38,6 +38,10 @@ module.exports = class TwistConfiguration {
      * @param {object} [env]
      */
     constructor(contextName, options = {}) {
+        this._init(contextName, options);
+    }
+
+    _init(contextName, options) {
         this.context = contextName || 'node';
 
         // The options that you can configure (these are the default options below):
@@ -56,6 +60,7 @@ module.exports = class TwistConfiguration {
         };
 
         this._libraryLoader = new LibraryLoader(this);
+
         if (options.root !== null) {
             this.addLibrary(options.root || process.cwd());
         }
