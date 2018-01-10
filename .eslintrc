@@ -1,8 +1,7 @@
 {
     "parser": "babel-eslint",
     "plugins": [
-        "babel",
-        "@twist/core"
+        "babel"
     ],
     "env": {
         "browser": true,

@@ -1,5 +1,7 @@
 # Twist Configuration
 
+[![Build Status](https://travis-ci.org/adobe/twist-configuration.svg?branch=master)](https://travis-ci.org/adobe/twist-configuration)
+
 Configuration of [Twist](http://github.com/adobe/twist) repos - this reads the configuration from `.twistrc`. This is used for configuring Babel.
 
 ## Usage
