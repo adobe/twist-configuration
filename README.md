@@ -1,6 +1,6 @@
 # Twist Configuration
 
-[![Build Status](https://travis-ci.org/adobe/twist-configuration.svg?branch=master)](https://travis-ci.org/adobe/twist-configuration)
+[![Build Status](https://travis-ci.org/adobe/twist-configuration.svg?branch=master)](https://travis-ci.org/adobe/twist-configuration) [![Greenkeeper badge](https://badges.greenkeeper.io/adobe/twist-configuration.svg)](https://greenkeeper.io/)
 
 Configuration of [Twist](http://github.com/adobe/twist) repos - this reads the configuration from `.twistrc`. This is used for configuring Babel.
 
